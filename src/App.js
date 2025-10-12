@@ -1,36 +1,51 @@
 import './App.css';
 import React from 'react';
-import Navbar from './components/navbar';
+import { useState, useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Header from './components/header';
-import LoginPage from './components/loginPage';
-import { Routes, Route } from "react-router-dom";
+import Navbar from './components/navbar';
 import MainPage from './components/mainPage';
-import { useNavigate } from "react-router-dom";
+import LoginPage from './components/loginPage';
 import PrivateRoute from './components/PrivateRoute';
+import { auth, onAuthStateChanged, signOut } from "./firebase";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const Navigate = useNavigate();
+
+  useEffect(() => {
+    // Firebase hört auf Login/Logout-Status
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setLoading(false); // egal ob eingeloggt oder nicht
+    });
+    return () => unsub();
+  }, []);
+
+  if (loading) {
+    return <div style={{ padding: 24 }}>⏳ Lade …</div>;
+  }
 
   const handleSearch = ({ query, location }) => {
     console.log("Suche:", query, "Ort:", location);
     // hier später: API call / Filter deiner Eventliste
   };
 
-  const handleLoginSuccess = () => setIsLoggedIn(true);
-  const handleLogout = () => {
-    setIsLoggedIn(false);
+  const handleLogout = async () => {
+    await signOut(auth);
     Navigate('./components/mainPage', {replace: true}); // wechselt zur neuen Seite
   };
+
+  const isLoggedIn = !!user; 
 
   return (
     <>
       {/* Dinge, die auf allen Seiten sichtbar sein sollen */}
       <Header 
         onSearch={handleSearch} 
-        isLoggedIn={isLoggedIn}
-        onLoginSuccess={handleLoginSuccess}
-        onLogout={handleLogout}  
+        isLoggedIn={!!user}
+        onLogout={() => auth.signOut()}  
       />
       <Navbar />
 
