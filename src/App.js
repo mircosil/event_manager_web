@@ -52,7 +52,7 @@ export default function App() {
             </PrivateRoute>
          }
          />
-         
+
         <Route path="*" element={<MainPage />} />        {/* Fallback */}
       </Routes>
     </>
