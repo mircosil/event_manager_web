@@ -1,55 +1,79 @@
 import React from "react";
 import "./loginModal.css";
 import { useNavigate } from "react-router-dom";
-import { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, doc, setDoc, serverTimestamp, } from "../firebase";
-import { setPersistence, browserLocalPersistence } from "firebase/auth";
+import { auth } from "../firebase";
+import { setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, } from "firebase/auth";
 
 function LoginModal({ onClose }) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    async function handleLogin(e) {
-      e.preventDefault();
-      const f = new FormData(e.currentTarget);
-      const email = f.get("email");
-      const password = f.get("password");
-      console.log("handleLogin values:", { email, hasPass: !!password });
-      
-      try {
-        await setPersistence(auth, browserLocalPersistence);
-        const cred = await signInWithEmailAndPassword(auth, email, password);
-        console.log("logged in uid:", cred.user.uid);
-        navigate("/loginPage", { replace: true });
-        onClose?.();
-      } catch (err) {
-        console.error("Firebase login error:", err);
-        alert(mapAuthError(err));
-      }
-    }
-    
+  async function handleLogin(e) {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    const email = String(f.get("email") || "").trim();
+    const password = String(f.get("password") || "");
+    await signInWithEmailAndPassword(auth, email, password);
+    navigate("/loginPage", { replace: true });
+    onClose?.();
+  }
 
-    async function handleRegister(e) {
-      e.preventDefault();
-      const f = new FormData(e.currentTarget);
-      const email = f.get("email");
-      const password = f.get("password");
-      console.log("handleRegister values:", { email, hasPass: !!password });
-    
-      try {
-        // Persistenz setzen (nicht zwingend, aber stabiler)
-        await setPersistence(auth, browserLocalPersistence);
-    
-        // Nur Registrierung – ohne Firestore, ohne Profil
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        console.log("created uid:", cred.user.uid);
-    
-        // Weiterleitung nach Erfolg
-        navigate("/loginPage", { replace: true });
-        onClose?.();
-      } catch (err) {
-        console.error("Register error →", err.code, err.message);
-        alert(err.code || err.message);
-      }
+  async function handleRegister(e) {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    const email = String(f.get("email") || "").trim();
+    const password = String(f.get("password") || "");
+    await createUserWithEmailAndPassword(auth, email, password);
+    navigate("/loginPage", { replace: true });
+    onClose?.();
+  }
+
+  /*
+  async function handleLogin(e) {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    const email = f.get("email");
+    const password = f.get("password");
+
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/loginPage", { replace: true });
+      onClose?.();
+    } catch (err) {
+      console.error("LOGIN ERROR:", err.code, err.message);
+      alert(
+        {
+          "auth/invalid-credential": "E-Mail oder Passwort falsch.",
+          "auth/wrong-password": "Passwort falsch.",
+          "auth/user-not-found": "Kein Konto mit dieser E-Mail.",
+          "auth/too-many-requests": "Zu viele Versuche. Warte kurz und versuch es erneut.",
+        }[err.code] || `Login fehlgeschlagen: ${err.code || err.message}`
+      );
     }
+  }
+
+  async function handleRegister(e) {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    const email = f.get("email");
+    const password = f.get("password");
+
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate("/loginPage", { replace: true });
+      onClose?.();
+    } catch (err) {
+      console.error("REGISTER ERROR:", err.code, err.message);
+      alert(
+        {
+          "auth/email-already-in-use": "Diese E-Mail ist bereits registriert.",
+          "auth/weak-password": "Passwort zu schwach (mind. 6 Zeichen).",
+        }[err.code] || `Registrierung fehlgeschlagen: ${err.code || err.message}`
+      );
+    }
+  }
+    */
 
   return (
     <div className="loginmodal-overlay" onClick={onClose}>
@@ -80,16 +104,15 @@ function LoginModal({ onClose }) {
 
 function mapAuthError(err) {
   const code = err?.code || "";
-  if (code === "auth/invalid-email") return "Ungültige E-Mail-Adresse.";
-  if (code === "auth/email-already-in-use") return "E-Mail wird bereits verwendet.";
-  if (code === "auth/weak-password") return "Passwort zu schwach (mind. 6 Zeichen).";
-  if (code === "auth/missing-password") return "Bitte ein Passwort eingeben.";
-  if (code === "auth/user-not-found" || code === "auth/wrong-password")
+  if (code === "auth/invalid-email") return "Ungültige E-Mail.";
+  if (code === "auth/email-already-in-use") return "E-Mail schon vergeben.";
+  if (code === "auth/weak-password") return "Passwort zu schwach (min. 6 Zeichen).";
+  if (code === "auth/wrong-password" || code === "auth/user-not-found")
     return "E-Mail oder Passwort falsch.";
-  if (code === "auth/network-request-failed") return "Netzwerkfehler. Bitte Verbindung prüfen.";
+  if (code === "auth/network-request-failed") return "Netzwerkfehler. Verbindung prüfen.";
   if (code === "auth/operation-not-allowed")
     return "E-Mail/Passwort-Login ist im Projekt nicht aktiviert.";
-  return `Unbekannter Fehler: ${code || "kein Code"}`;
+  return `Fehler: ${code || err?.message || "Unbekannt"}`;
 }
 
 export default LoginModal;

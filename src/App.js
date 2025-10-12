@@ -9,23 +9,14 @@ import LoginPage from './components/loginPage';
 import PrivateRoute from './components/PrivateRoute';
 import { auth, onAuthStateChanged, signOut } from "./firebase";
 
-function App() {
+export default function App() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Firebase hört auf Login/Logout-Status
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      setLoading(false); // egal ob eingeloggt oder nicht
-    });
-    return () => unsub();
-  }, []);
-
-  if (loading) {
-    return <div style={{ padding: 24 }}>⏳ Lade …</div>;
-  }
+    const unsub = onAuthStateChanged(auth, setUser);
+    return unsub;
+  }, [])
 
   const handleSearch = ({ query, location }) => {
     console.log("Suche:", query, "Ort:", location);
@@ -34,10 +25,10 @@ function App() {
 
   const handleLogout = async () => {
     await signOut(auth);
-    Navigate('./components/mainPage', {replace: true}); // wechselt zur neuen Seite
+    navigate("/", { replace: true });
   };
 
-  const isLoggedIn = !!user; 
+
 
   return (
     <>
@@ -45,28 +36,25 @@ function App() {
       <Header 
         onSearch={handleSearch} 
         isLoggedIn={!!user}
-        onLogout={() => auth.signOut()}  
+        onLogout={handleLogout} 
       />
       <Navbar />
 
       {/* Seitenwechsel hier */}
       <Routes>
+        <Route path="/" element={<MainPage />} />        {/* Startseite */}
+
         <Route
-          path="/components/mainPage"
-          element={<MainPage />}  // deine Startseite
-        />
-        <Route index element={<MainPage />} />
-        <Route // Ziel nach Login
-          path="/components/loginPage"
+          path="/loginPage"
           element={
-            <PrivateRoute isLoggedIn={isLoggedIn}>
+            <PrivateRoute isLoggedIn={!!user}>
               <LoginPage />
-            </PrivateRoute>  
-          }
-        />
+            </PrivateRoute>
+         }
+         />
+         
+        <Route path="*" element={<MainPage />} />        {/* Fallback */}
       </Routes>
     </>
   );
 }
-
-export default App;
