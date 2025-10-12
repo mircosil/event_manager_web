@@ -1,0 +1,53 @@
+.loginmodal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* WICHTIG: kein Klassenname "modal", sonst Konflikt mit Bootstrap */
+.loginmodal {
+  background: #c1c1c1;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 320px;
+  max-width: calc(100% - 2rem);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  /* Falls irgendein Global-CSS es versteckt: */
+  display: block !important;
+}
+
+.loginmodal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.loginmodal-form input {
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.loginmodal-form button {
+  padding: .6rem;
+  border: 0;
+  border-radius: 6px;
+  background: #484848;
+  color: #fff;
+  cursor: pointer;
+}
+
+.loginmodal-form button:hover { background: #555; }
+.close-btn { background: #6c3434 !important; }
+.close-btn:hover { background: #777 !important; }
+
+.absatz {
+    margin: 20px;
+    border: 2px solid rgb(0, 0, 0);
+    opacity: 0.8;
+}
+

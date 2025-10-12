@@ -1,0 +1,131 @@
+.header {
+  padding: 24px 16px;
+  background: #b6b6b6;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.login-button, .logout-button {
+  background-color: #606060;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.4rem;
+}
+
+.login-button:hover, .logout-button:hover {
+  background-color: #9d9d9d;
+}
+
+.header h1 {
+  margin-bottom: 40px;
+  text-align: center;
+  font-size: 60px;
+}
+
+.searchbar {
+  display: flex;
+  padding: 15px;
+  margin-bottom: 20px;
+  font-size: 40px;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;              /* bricht bei kleinen Breiten um */
+}
+
+.searchlabel {
+  font-weight: 700;
+}
+
+.searchbar input {
+  padding: 8px 10px;
+  border: 3px solid #000000;
+  border-radius: 6px;
+  min-width: 180px;
+}
+
+.searchbar button {
+  padding: 8px 14px;
+  font-size: large;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #333;
+  color: #fff;
+}
+
+/* --- Modal Styling --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.login-form input {
+  padding: 0.5rem;
+  border: 1px solid #000000;
+  border-radius: 5px;
+}
+
+.login-form button {
+  padding: 0.6rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background-color: #555;
+}
+
+.close-btn {
+  background-color: #aaa !important;
+}
+
+.close-btn:hover {
+  background-color: #888 !important;
+}
+
+
+/* optional: auf sehr kleinen Screens untereinander */
+@media (max-width: 480px) {
+  .searchbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .searchlabel {
+    align-self: flex-start;
+  }
+}

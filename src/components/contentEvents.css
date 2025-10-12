@@ -1,0 +1,10 @@
+.box {
+    display: flex;
+    justify-content: center;
+}
+
+.card-test{
+    gap: 100px;
+    margin: 50px;
+    border: 2px solid black;
+}
