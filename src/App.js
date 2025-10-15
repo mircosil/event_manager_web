@@ -8,6 +8,8 @@ import MainPage from './components/mainPage';
 import LoginPage from './components/loginPage';
 import PrivateRoute from './components/PrivateRoute';
 import { auth, onAuthStateChanged, signOut } from "./firebase";
+import "leaflet/dist/leaflet.css";
+
 
 export default function App() {
   const [user, setUser] = useState(null);

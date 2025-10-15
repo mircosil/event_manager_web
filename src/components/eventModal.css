@@ -1,32 +1,116 @@
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* ===== Overlay & Modal ===== */
+.event-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;              
+}
+
+.event-modal {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: min(960px, 92vw);    
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+}
+
+.event-modal h2 {
+  margin: 0 0 1rem 0;
+}
+
+.event-modal-form {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 2fr);
+  gap: 24px;
+  align-items: start;
+  width: 100%;
+}
+
+.event-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 0fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.event-left,
+.event-right {
+  display: grid;
+  gap: 20px;
+}
+
+.event-modal-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;   
+  object-fit: cover;
+  border-radius: 8px;
+  background: #eee;       
+  display: block;
+}
+
+
+.event-left input,
+.event-left textarea,
+.event-right input,
+.event-right textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.event-left textarea,
+.event-right textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+
+.event-right .event-map {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;   
+  background: #e9e9e9;
+  border-radius: 8px;
+}
+
+.event-right .event-address {
+  background: #eee;
+  border-radius: 8px;
+  padding: 10px 12px;
+  line-height: 1.4;
+}
+
+
+.event-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.event-modal-actions button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.date-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+ 
+
+@media (max-width: 800px) {
+  .event-layout {
+    grid-template-columns: 1fr;
   }
-  
-  .modal {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    width: 400px;
-    max-width: 90%;
-  }
-  
-  .modal form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .modal-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-  
+}
