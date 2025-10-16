@@ -13,6 +13,8 @@ export default function EventModal({ onClose, onEventAdded }) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState("./logo192.png");
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +41,7 @@ export default function EventModal({ onClose, onEventAdded }) {
         description,
         userId: user.uid,
         createdAt: serverTimestamp(),
+        imageUrl,
       });
   
       // 🧹 Formular zurücksetzen

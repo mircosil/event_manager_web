@@ -15,17 +15,49 @@ export default function MainPage() {
 
   return (
     <main style={{ padding: 20 }}>
-      <h1>Willkommen!</h1>
-      <p>Dies ist die Startseite.</p>
-      <h1>Lokale Events</h1>
-      <ul>
+
+<div className="event-card-container">
         {events.map((e) => (
-          <li key={e.id}>
-            <strong>{e.title}</strong> – {e.location} ({e.date})
-            <p>{e.description}</p>
-          </li>
+          <div className="event-card card" key={e.id}>
+            <img
+              src={e.imageUrl || "./logo192.png"}
+              className="card-img-top"
+              alt={e.title}
+            />
+
+            <div className="card-body d-flex flex-column">
+              <h5 className="card-title">{e.title}</h5>
+              <p className="card-text">{e.description}</p>
+
+              {e.location && (
+                <p className="card-text">
+                  <strong>Ort:</strong> {e.location}
+                </p>
+              )}
+
+              {(e.startDate || e.endDate) && (
+                <p className="card-text">
+                  <strong>Datum:</strong>{" "}
+                  {e.startDate
+                    ? new Date(e.startDate.seconds * 1000).toLocaleDateString()
+                    : "?"}
+                  {" - "}
+                  {e.endDate
+                    ? new Date(e.endDate.seconds * 1000).toLocaleDateString()
+                    : "?"}
+                </p>
+              )}
+
+              <div className="mt-auto">
+                <a href="#" className="btn btn-primary w-100">
+                  Details ansehen
+                </a>
+              </div>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
+      
     </main>
   );
 }

@@ -35,23 +35,73 @@ main {
   }
 
 
-  .event-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999; /* über Bootstrap */
+  :root {
+    --container-max: 1920px;  
+    --gap: 24px;              
+    --card-min: 300px;       
+    --img-h: 230px;           
   }
-  
-  .event-modal {
-    background: #fff;
-    width: min(520px, 92vw);
-    border-radius: 12px;
-    padding: 16px 18px;
-    box-shadow: 0 12px 32px rgba(0,0,0,.3);
-  }
-  
-  .event-modal-form { display: flex; flex-direction: column; gap: 10px; }
-  .event-modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* Container für alle Event-Cards */
+.event-card-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); 
+  gap: var(--gap);                              
+  padding: 0 32px;                         
+  max-width: var(--container-max);                       
+  margin: 0 auto; 
+}
+
+/* Jede einzelne Karte */
+.event-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  transition: transform .2s ease, box-shadow .2s ease;
+  min-height: 520px;
+  margin-top: 20px;
+}
+
+/* Hover-Effekt */
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.15);
+}
+
+/* Card-Bild */
+.event-card .card-img-top {
+  height: var(--img-h);     
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* Body der Karte */
+.event-card .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+}
+
+/* Titel und Text */
+.event-card .card-title {
+  font-weight: 700;
+}
+
+.event-card .card-text {
+  font-size: 1.2rem;
+}
+
+/* Button */
+.event-card .btn {
+  margin-top: auto;
+}
+
+/* Responsive Verhalten */
+@media (max-width: 1400px) { .event-card-container { grid-template-columns: repeat(4, minmax(var(--card-min), 1fr)); } }
+@media (max-width: 1100px) { .event-card-container { grid-template-columns: repeat(3, minmax(var(--card-min), 1fr)); } }
+@media (max-width: 800px)  { .event-card-container { grid-template-columns: repeat(2, minmax(var(--card-min), 1fr)); } }
+@media (max-width: 520px)  { .event-card-container { grid-template-columns: 1fr; } }
