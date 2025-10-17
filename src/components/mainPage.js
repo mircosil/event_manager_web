@@ -1,22 +1,37 @@
+// src/components/MainPage.jsx
 import React, { useEffect, useState } from "react";
-import { db, collection, getDocs, orderBy, query, } from "../firebase";
+import { db, collection, getDocs, orderBy, query } from "../firebase";
+import EventDetails from "./EventDetails";
+import "./loginPage.css";
 
 export default function MainPage() {
   const [events, setEvents] = useState([]);
+  const [detailsEvent, setDetailsEvent] = useState(null);
+
+  const fetchEvents = async () => {
+    const q = query(collection(db, "events"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+    const items = snap.docs.map((doc) => {
+      const data = doc.data();
+      // Alte (String) und neue (Objekt) Locations unterstützen
+      const loc =
+        typeof data.location === "string"
+          ? { address: data.location, lat: null, lon: null }
+          : data.location || null;
+      return { id: doc.id, ...data, location: loc };
+    });
+    setEvents(items);
+  };
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      const q = query(collection(db, "events"), orderBy("createdAt", "desc"));
-      const snap = await getDocs(q);
-      setEvents(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-    };
     fetchEvents();
   }, []);
 
   return (
     <main style={{ padding: 20 }}>
+      <h1>Deine lokalen Events</h1>
 
-<div className="event-card-container">
+      <div className="event-card-container">
         {events.map((e) => (
           <div className="event-card card" key={e.id}>
             <img
@@ -24,14 +39,16 @@ export default function MainPage() {
               className="card-img-top"
               alt={e.title}
             />
-
             <div className="card-body d-flex flex-column">
               <h5 className="card-title">{e.title}</h5>
-              <p className="card-text">{e.description}</p>
+              {e.description && <p className="card-text">{e.description}</p>}
 
               {e.location && (
                 <p className="card-text">
-                  <strong>Ort:</strong> {e.location}
+                  <strong>Ort:</strong>{" "}
+                  {typeof e.location === "string"
+                    ? e.location
+                    : (e.location?.address || "")}
                 </p>
               )}
 
@@ -49,15 +66,22 @@ export default function MainPage() {
               )}
 
               <div className="mt-auto">
-                <a href="#" className="btn btn-primary w-100">
+                <button
+                  className="btn btn-outline-primary w-100"
+                  onClick={() => setDetailsEvent(e)}
+                >
                   Details ansehen
-                </a>
+                </button>
               </div>
             </div>
           </div>
         ))}
       </div>
-      
+
+      {detailsEvent && (
+        <EventDetails event={detailsEvent} onClose={() => setDetailsEvent(null)} />
+      )}
     </main>
   );
 }
+

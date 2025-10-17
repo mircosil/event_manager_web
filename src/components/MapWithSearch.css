@@ -1,0 +1,47 @@
+.map-with-search {
+    position: relative;
+    display: grid;
+    gap: 10px;
+  }
+  
+  /* Suchfeld */
+  .map-with-search .search-wrapper {
+    position: relative;
+  }
+  .map-with-search .search-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font: inherit;
+  }
+  
+  /* Dropdown */
+  .map-with-search .search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    max-height: 240px;
+    overflow: auto;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    list-style: none;
+    margin: 0;
+    padding: 6px 0;
+  }
+  .map-with-search .search-dropdown li {
+    padding: 8px 12px;
+    cursor: pointer;
+    line-height: 1.2;
+  }
+  .map-with-search .search-dropdown li:hover,
+  .map-with-search .search-dropdown li.active {
+    background: #f0f6ff;
+  }
+  

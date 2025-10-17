@@ -10,6 +10,8 @@
 }
 
 .event-modal {
+  display: flex;
+  flex-direction: column;
   background: #fff;
   padding: 2rem;
   border-radius: 10px;
@@ -27,18 +29,27 @@
   gap: 24px;
   align-items: start;
   width: 100%;
+  flex: 1 1 auto;            /* <<< WICHTIG: füllt den verfügbaren Platz */
+  min-height: 0;             /* erlaubt zu schrumpfen (gegen Overflow) */
+  overflow: auto;
 }
+
 
 .event-layout {
   display: grid;
+  position: relative;
+  overflow: hidden;
   grid-template-columns: minmax(0, 2fr) minmax(0, 0fr);
   gap: 24px;
   align-items: start;
+  overflow: visible;
 }
 
 .event-left,
 .event-right {
   display: grid;
+  position: relative;
+  overflow: visible;
   gap: 20px;
 }
 
@@ -50,6 +61,14 @@
   background: #eee;       
   display: block;
 }
+
+.leaflet-container {              /* MapWithSearch rendert diese Klasse */
+  position: relative;
+  z-index: 1;                     /* unter den Actions belassen */
+  border-radius: 8px;
+}
+
+.event-map { position: relative; z-index: 1; }
 
 
 .event-left input,
@@ -89,10 +108,12 @@
 
 
 .event-modal-actions {
+  margin-top: auto;
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 12px;
+  position: relative;
+  z-index: 3;
 }
 
 .event-modal-actions button {
@@ -100,6 +121,10 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
+}
+
+.event-right .leaflet-container {
+  height: 300px;
 }
 
 .date-range {
