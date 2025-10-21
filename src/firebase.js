@@ -2,6 +2,7 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, setPersistence, browserLocalPersistence,} from "firebase/auth";
 import { getFirestore, collection, addDoc, getDocs, doc, setDoc, serverTimestamp, query, orderBy, } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 
 const firebaseConfig = {
@@ -19,6 +20,7 @@ const app  = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 const db = getFirestore(app);
+export const storage = getStorage(app);
 
 //export const auth = getAuth(app);
 
@@ -28,4 +30,4 @@ setPersistence(auth, browserLocalPersistence).catch(console.error);
 // am Ende von src/firebase.js
 //export { onAuthStateChanged, signOut } from "firebase/auth";
 
-export { auth, db, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, collection, addDoc, getDocs, doc, setDoc, serverTimestamp, query, orderBy, };
+export { auth, db, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword, collection, addDoc, getDocs, doc, setDoc, serverTimestamp, query, orderBy, getStorage, };
