@@ -1,6 +1,7 @@
 .header {
   padding: 24px 16px;
   background: #b6b6b6;
+  width: 100%;
 }
 
 .header-top {
@@ -33,7 +34,7 @@
   display: flex;
   padding: 15px;
   margin-bottom: 20px;
-  font-size: 40px;
+  font-size: 32px;
   gap: 14px;
   align-items: center;
   justify-content: center;
@@ -117,6 +118,29 @@
 .close-btn:hover {
   background-color: #888 !important;
 }
+
+/* optionales Styling */
+.topnav {
+  display: flex;
+  justify-content: center;
+  background-color: rgb(163, 163, 163);
+  padding: 15px;
+  margin: 20px;
+  color: rgb(0, 0, 0);
+  font-size: 30px;
+  gap : 50px;
+}
+.topnav-item {
+  display: flex;
+  list-style: none;
+  color: black;
+  text-decoration: none;
+}
+.topnav-item:hover {
+  text-decoration: none;
+  color: rgb(149, 128, 149);
+} 
+
 
 
 /* optional: auf sehr kleinen Screens untereinander */

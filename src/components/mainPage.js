@@ -1,5 +1,6 @@
 // src/components/MainPage.jsx
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { db, collection, getDocs, orderBy, query } from "../firebase";
 import EventDetails from "./EventDetails";
 import "./loginPage.css";
@@ -8,18 +9,29 @@ export default function MainPage() {
   const [events, setEvents] = useState([]);
   const [detailsEvent, setDetailsEvent] = useState(null);
 
+  // Tab aus der URL lesen (?tab=sport | today | weekend | ...)
+  const [searchParams] = useSearchParams();
+  const activeTab = searchParams.get("tab") || "all";
+
   const fetchEvents = async () => {
     const q = query(collection(db, "events"), orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
-    const items = snap.docs.map((doc) => {
-      const data = doc.data();
-      // Alte (String) und neue (Objekt) Locations unterstützen
+
+    const items = snap.docs.map((docu) => {
+      const data = docu.data();
       const loc =
         typeof data.location === "string"
           ? { address: data.location, lat: null, lon: null }
           : data.location || null;
-      return { id: doc.id, ...data, location: loc };
+
+      return {
+        id: docu.id,
+        ...data,
+        location: loc,
+        categories: Array.isArray(data.categories) ? data.categories : [],
+      };
     });
+
     setEvents(items);
   };
 
@@ -27,18 +39,62 @@ export default function MainPage() {
     fetchEvents();
   }, []);
 
+  // ---- Filter Helpers ----
+  const toDate = (tsOrDate) =>
+    tsOrDate?.seconds
+      ? new Date(tsOrDate.seconds * 1000)
+      : tsOrDate
+      ? new Date(tsOrDate)
+      : null;
+
+  const occursInRange = (ev, start, end) => {
+    const s = toDate(ev.startDate);
+    const e = toDate(ev.endDate) || s;
+    if (!s) return false;
+    return e >= start && s <= end;
+  };
+
+  const isToday = (ev) => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const end   = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    return occursInRange(ev, start, end);
+  };
+
+  const isThisWeekend = (ev) => {
+    const now = new Date();
+    const day = now.getDay(); // So=0 ... Sa=6
+    const diffToSat = (6 - day + 7) % 7;
+    const sat = new Date(now); sat.setHours(0, 0, 0, 0); sat.setDate(now.getDate() + diffToSat);
+    const sun = new Date(sat); sun.setHours(23, 59, 59, 999); sun.setDate(sat.getDate() + 1);
+    return occursInRange(ev, sat, sun);
+  };
+
+  const hasCategory = (e, key) =>
+    Array.isArray(e.categories) && e.categories.includes(key);
+
+  // Gefilterte Liste basierend auf dem aktiven Tab
+  const filtered = events.filter((e) => {
+    if (activeTab === "all") return true;
+    if (activeTab === "today") return isToday(e);
+    if (activeTab === "weekend") return isThisWeekend(e);
+    return hasCategory(e, activeTab); // sport, food, folk, culture ...
+  });
+
   return (
     <main style={{ padding: 20 }}>
+      {/* Überschrift kannst du lassen, Filtern übernimmt die Header-Leiste via ?tab=... */}
       <h1>Deine lokalen Events</h1>
 
       <div className="event-card-container">
-        {events.map((e) => (
+        {filtered.map((e) => (
           <div className="event-card card" key={e.id}>
             <img
               src={e.imageUrl || "./logo192.png"}
               className="card-img-top"
               alt={e.title}
             />
+
             <div className="card-body d-flex flex-column">
               <h5 className="card-title">{e.title}</h5>
               {e.description && <p className="card-text">{e.description}</p>}
@@ -48,7 +104,7 @@ export default function MainPage() {
                   <strong>Ort:</strong>{" "}
                   {typeof e.location === "string"
                     ? e.location
-                    : (e.location?.address || "")}
+                    : e.location?.address || ""}
                 </p>
               )}
 
@@ -84,4 +140,5 @@ export default function MainPage() {
     </main>
   );
 }
+
 

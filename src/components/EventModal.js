@@ -14,6 +14,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { CATEGORY_OPTIONS } from "../constants/categories";
 
 /* -------------------- Helpers -------------------- */
 function toInputDate(v) {
@@ -32,7 +33,7 @@ function toTimestampOrNull(s) {
   return Number.isNaN(d.getTime()) ? null : Timestamp.fromDate(d);
 }
 
-// Große Bilder vor Upload verkleinern
+// Große Bilder vor Upload verkleinern (macht Upload schneller)
 async function compressImage(file, maxW = 1600, maxH = 1200, quality = 0.8) {
   try {
     if (!file?.type?.startsWith("image/")) return file;
@@ -73,6 +74,7 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("./logo192.png");
+  const [categories, setCategories] = useState([]);
 
   // Upload-States
   const [file, setFile] = useState(null);
@@ -84,9 +86,9 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
   // Vorbefüllen beim Editieren
   useEffect(() => {
     if (!initialEvent) {
-      // Neu-anlegen: Defaults stehen lassen
       setPreviewUrl("./logo192.png");
       setImageUrl("./logo192.png");
+      setCategories([]);
       return;
     }
     setTitle(initialEvent.title || "");
@@ -96,8 +98,8 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
         : initialEvent.location || { address: "", lat: null, lon: null }
     );
     setDescription(initialEvent.description || "");
+    setCategories(Array.isArray(initialEvent?.categories) ? initialEvent.categories : []);
 
-    // Bild-URL direkt aus dem Event verwenden (kein DownloadURL nötig)
     const url = initialEvent.imageUrl || "./logo192.png";
     setImageUrl(url);
     setPreviewUrl(url);
@@ -206,6 +208,7 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
       description,
       imageUrl: finalImageUrl,
       userId: user.uid,
+      categories: categories, // Mehrfachkategorien
     };
 
     try {
@@ -306,6 +309,39 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
               <div className="location">
                 <MapWithSearch location={location} setLocation={setLocation} />
               </div>
+
+            {/* ▼ Mehrfach-Kategorien ▼ */}
+            <div className="category-group">
+              <label className="category-label">Kategorien</label>
+
+              <div className="category-list">
+                {CATEGORY_OPTIONS
+                  .filter(o => !["today", "weekend"].includes(o.key)) // nur echte Kategorien
+                  .map(opt => {
+                    const checked = categories.includes(opt.key);
+                    return (
+                      <label
+                        key={opt.key}
+                        className={`chip ${checked ? "is-checked" : ""}`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={(e) => {
+                            setCategories(prev =>
+                              e.target.checked
+                                ? [...new Set([...prev, opt.key])]
+                                : prev.filter(k => k !== opt.key)
+                            );
+                          }}
+                        />
+                        <span>{opt.label}</span>
+                      </label>
+                    );
+                  })}
+              </div>
+              </div>
+
             </section>
           </form>
 
@@ -334,4 +370,5 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
 
   return createPortal(modal, document.body);
 }
+
 

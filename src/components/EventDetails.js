@@ -2,10 +2,12 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import "./eventModal.css";
+import { CATEGORY_OPTIONS } from "../constants/categories";
 
 export default function EventDetails({ event, onClose }) {
   if (!event) return null;
 
+  // Datum robust lesen
   const start = event.startDate?.seconds
     ? new Date(event.startDate.seconds * 1000)
     : null;
@@ -13,11 +15,17 @@ export default function EventDetails({ event, onClose }) {
     ? new Date(event.endDate.seconds * 1000)
     : null;
 
-  // Adresse direkt ableiten (String-kompatibel + Objekt-kompatibel)
+  // Adresse robust lesen (String oder Objekt)
   const address =
     typeof event.location === "string"
       ? event.location
       : (event.location?.address || "");
+
+  // Kategorien lesen & in Labels übersetzen
+  const categories = Array.isArray(event.categories) ? event.categories : [];
+  const labelByKey = Object.fromEntries(
+    CATEGORY_OPTIONS.map((o) => [o.key, o.label])
+  );
 
   const modal = (
     <div className="event-modal-overlay" onClick={onClose}>
@@ -32,24 +40,54 @@ export default function EventDetails({ event, onClose }) {
               className="event-modal-image"
             />
 
-            <div>
+            <div style={{ marginTop: 8 }}>
               <h4 style={{ margin: "0 0 6px" }}>{event.title}</h4>
-              {event.description && <p style={{ margin: 0 }}>{event.description}</p>}
+              {event.description && (
+                <p style={{ margin: 0 }}>{event.description}</p>
+              )}
             </div>
 
-            <div>
+            <div style={{ marginTop: 10 }}>
               <p style={{ margin: "6px 0" }}>
-                <strong>Ort:</strong> {address}
+                <strong>Ort:</strong> {address || "—"}
               </p>
               <p style={{ margin: "6px 0" }}>
                 <strong>Datum:</strong>{" "}
-                {start ? start.toLocaleDateString() : "?"} -{" "}
+                {start ? start.toLocaleDateString() : "?"} –{" "}
                 {end ? end.toLocaleDateString() : "?"}
               </p>
             </div>
+
+            {/* Kategorien (read-only Badges) */}
+            {categories.length > 0 && (
+              <div style={{ marginTop: 10 }}>
+                <div style={{ fontWeight: 600, marginBottom: 6 }}>
+                  Kategorien
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                  {categories.map((key) => (
+                    <span
+                      key={key}
+                      className="badge"
+                      style={{
+                        display: "inline-block",
+                        padding: "4px 8px",
+                        background: "#eef2ff",
+                        color: "#1e3a8a",
+                        borderRadius: 999,
+                        fontSize: ".85rem",
+                      }}
+                    >
+                      {labelByKey[key] ?? key}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </section>
 
-          <section className="event-right">{/* optional: read-only Karte */}</section>
+          {/* Optionale rechte Spalte, z.B. read-only Karte */}
+          <section className="event-right"></section>
         </div>
 
         <div className="event-modal-actions">
@@ -63,4 +101,5 @@ export default function EventDetails({ event, onClose }) {
 
   return createPortal(modal, document.body);
 }
+
 

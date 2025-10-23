@@ -100,6 +100,11 @@ main {
   margin-top: auto;
 }
 
+.tabs { display:flex; gap:12px; background:#e5e7eb; padding:10px 16px; border-radius:8px; margin-bottom:16px; }
+.tab { background:transparent; border:none; padding:8px 12px; cursor:pointer; border-radius:6px; font-weight:600; color:#374151; }
+.tab.active { background:#ffffff; box-shadow:0 1px 3px rgba(0,0,0,.1); color:#111827; }
+
+
 /* Responsive Verhalten */
 @media (max-width: 1400px) { .event-card-container { grid-template-columns: repeat(4, minmax(var(--card-min), 1fr)); } }
 @media (max-width: 1100px) { .event-card-container { grid-template-columns: repeat(3, minmax(var(--card-min), 1fr)); } }

@@ -6,16 +6,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;              
+  padding: 1rem;           
 }
 
 .event-modal {
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: #fffdfd;
   padding: 2rem;
   border-radius: 10px;
-  width: min(960px, 92vw);    
+  width: min(1060px, 92vw);    
   box-shadow: 0 10px 30px rgba(0,0,0,.15);
 }
 
@@ -29,8 +29,8 @@
   gap: 24px;
   align-items: start;
   width: 100%;
-  flex: 1 1 auto;            /* <<< WICHTIG: füllt den verfügbaren Platz */
-  min-height: 0;             /* erlaubt zu schrumpfen (gegen Overflow) */
+  flex: 1 1 auto;           
+  min-height: 0;             
   overflow: auto;
 }
 
@@ -170,6 +170,101 @@
   border-radius: 6px;
   padding: 4px 6px;
 }
+
+.category-group {
+  margin-top: 12px;
+}
+
+.category-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+  background: #fff;
+}
+
+/* --- Kategorien als Chips --- */
+.category-group {
+  margin-top: 12px;
+}
+
+.category-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.category-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;    /* neutraler Rand */
+  border-radius: 9999px;         /* Pill-Form */
+  background: #fff;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s ease, color .15s ease, border-color .15s ease,
+              box-shadow .15s ease, transform .02s ease;
+}
+
+.chip:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.chip:active {
+  transform: translateY(1px);
+}
+
+.chip input {
+  /* native Checkbox unsichtbar, aber fokussierbar */
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chip span {
+  font-size: 0.95rem;
+  line-height: 1;
+  color: #111827;
+}
+
+/* aktiver Zustand */
+.chip.is-checked {
+  background: #eef2ff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
+}
+
+.chip.is-checked span {
+  color: #1e3a8a;
+  font-weight: 600;
+}
+
+.category-actions {
+  margin-top: 8px;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #2563eb;
+  cursor: pointer;
+}
+.link-btn:hover { text-decoration: underline; }
+
+
 
  
 

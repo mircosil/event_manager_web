@@ -3,7 +3,6 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Header from './components/header';
-import Navbar from './components/navbar';
 import MainPage from './components/mainPage';
 import LoginPage from './components/loginPage';
 import PrivateRoute from './components/PrivateRoute';
@@ -40,7 +39,6 @@ export default function App() {
         isLoggedIn={!!user}
         onLogout={handleLogout} 
       />
-      <Navbar />
 
       {/* Seitenwechsel hier */}
       <Routes>
