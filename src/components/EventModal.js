@@ -4,15 +4,7 @@ import { createPortal } from "react-dom";
 import "./eventModal.css";
 import MapWithSearch from "./MapWithSearch";
 import { auth, db, storage } from "../firebase";
-import {
-  Timestamp,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  collection,
-  serverTimestamp,
-} from "firebase/firestore";
+import { Timestamp, addDoc, updateDoc, deleteDoc, doc, collection, serverTimestamp, } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { CATEGORY_OPTIONS } from "../constants/categories";
 

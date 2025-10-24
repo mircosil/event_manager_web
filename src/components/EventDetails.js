@@ -1,84 +1,144 @@
-// src/components/EventDetails.jsx
-import React from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import "./eventModal.css";
-import { CATEGORY_OPTIONS } from "../constants/categories";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import L from "leaflet";
+import "./eventModal.css";   
+import "./eventDetails.css";  
+
+// Leaflet Marker-Icon sauber setzen (funktioniert in CRA/Vite/Webpack)
+const defaultIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+// Map sanft auf neue Koordinaten zentrieren
+function RecenterMap({ center }) {
+  const map = useMap();
+  useEffect(() => {
+    if (center) map.setView(center, 14, { animate: true });
+  }, [center, map]);
+  return null;
+}
 
 export default function EventDetails({ event, onClose }) {
-  if (!event) return null;
+  // ⚠️ Hooks müssen vor jedem early return stehen
+  // Wir arbeiten erstmal mit einem "sicheren" Event-Objekt
+  const safeEvent = event ?? {};
 
-  // Datum robust lesen
-  const start = event.startDate?.seconds
-    ? new Date(event.startDate.seconds * 1000)
-    : null;
-  const end = event.endDate?.seconds
-    ? new Date(event.endDate.seconds * 1000)
-    : null;
-
-  // Adresse robust lesen (String oder Objekt)
+  // Adresse robust ableiten (String + Objekt)
   const address =
-    typeof event.location === "string"
-      ? event.location
-      : (event.location?.address || "");
+    typeof safeEvent.location === "string"
+      ? safeEvent.location
+      : safeEvent.location?.address || "";
 
-  // Kategorien lesen & in Labels übersetzen
-  const categories = Array.isArray(event.categories) ? event.categories : [];
-  const labelByKey = Object.fromEntries(
-    CATEGORY_OPTIONS.map((o) => [o.key, o.label])
-  );
+  // Koordinaten aus dem Event lesen (falls vorhanden)
+  const initialCoords = useMemo(() => {
+    const loc = safeEvent.location && typeof safeEvent.location === "object"
+      ? safeEvent.location
+      : null;
+    const lat = Number(loc?.lat);
+    const lon = Number(loc?.lon);
+    return Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null;
+  }, [safeEvent.location]);
+
+  // Zustand für die tatsächlich anzuzeigenden Koordinaten
+  const [coords, setCoords] = useState(initialCoords);
+  const [geocoding, setGeocoding] = useState(false);
+
+  // Falls keine Koordinaten vorhanden, einmalig per Nominatim aus der Adresse ermitteln
+  useEffect(() => {
+    let cancelled = false;
+
+    async function geocodeOnce(q) {
+      try {
+        setGeocoding(true);
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          q
+        )}`;
+        const res = await fetch(url, { headers: { "Accept-Language": "de" } });
+        const data = await res.json();
+        if (!cancelled && Array.isArray(data) && data.length > 0) {
+          const { lat, lon } = data[0];
+          const parsed = [Number(lat), Number(lon)];
+          if (Number.isFinite(parsed[0]) && Number.isFinite(parsed[1])) {
+            setCoords(parsed);
+          }
+        }
+      } catch {
+        // still fine – Karte bleibt einfach aus
+      } finally {
+        if (!cancelled) setGeocoding(false);
+      }
+    }
+
+    if (!coords && address) {
+      geocodeOnce(address);
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [coords, address]);
+
+  // Datum
+  const start = safeEvent.startDate?.seconds
+    ? new Date(safeEvent.startDate.seconds * 1000)
+    : null;
+  const end = safeEvent.endDate?.seconds
+    ? new Date(safeEvent.endDate.seconds * 1000)
+    : null;
+
+  // Kategorien
+  const cats = Array.isArray(safeEvent.categories) ? safeEvent.categories : [];
+
+  // ✅ Erst NACH den Hooks darf früh beendet werden
+  if (!event) return null;
 
   const modal = (
     <div className="event-modal-overlay" onClick={onClose}>
       <div className="event-modal" onClick={(e) => e.stopPropagation()}>
-        <h2>Event</h2>
 
-        <div className="event-layout">
-          <section className="event-left">
+        <div className="details-layout">
+          {/* Linke Spalte: Bild & Text */}
+          <section className="details-left">
             <img
-              src={event.imageUrl || "./logo192.png"}
+              src={safeEvent.imageUrl || "./logo192.png"}
               alt="Event"
-              className="event-modal-image"
+              className="details-image"
             />
 
-            <div style={{ marginTop: 8 }}>
-              <h4 style={{ margin: "0 0 6px" }}>{event.title}</h4>
-              {event.description && (
-                <p style={{ margin: 0 }}>{event.description}</p>
+            <div className="details-block">
+              <h4 className="details-title">{safeEvent.title}</h4>
+              {safeEvent.description && (
+                <p className="details-paragraph">{safeEvent.description}</p>
               )}
             </div>
 
-            <div style={{ marginTop: 10 }}>
-              <p style={{ margin: "6px 0" }}>
-                <strong>Ort:</strong> {address || "—"}
+            <div className="details-block">
+              <p className="details-paragraph">
+                <strong>Ort:</strong> {address}
               </p>
-              <p style={{ margin: "6px 0" }}>
+              <p className="details-paragraph">
                 <strong>Datum:</strong>{" "}
                 {start ? start.toLocaleDateString() : "?"} –{" "}
                 {end ? end.toLocaleDateString() : "?"}
               </p>
             </div>
 
-            {/* Kategorien (read-only Badges) */}
-            {categories.length > 0 && (
-              <div style={{ marginTop: 10 }}>
-                <div style={{ fontWeight: 600, marginBottom: 6 }}>
-                  Kategorien
-                </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                  {categories.map((key) => (
-                    <span
-                      key={key}
-                      className="badge"
-                      style={{
-                        display: "inline-block",
-                        padding: "4px 8px",
-                        background: "#eef2ff",
-                        color: "#1e3a8a",
-                        borderRadius: 999,
-                        fontSize: ".85rem",
-                      }}
-                    >
-                      {labelByKey[key] ?? key}
+            {!!cats.length && (
+              <div className="details-block">
+                <p className="details-paragraph">
+                  <strong>Kategorien</strong>
+                </p>
+                <div className="details-chips">
+                  {cats.map((c) => (
+                    <span className="chip" key={c}>
+                      {c}
                     </span>
                   ))}
                 </div>
@@ -86,8 +146,35 @@ export default function EventDetails({ event, onClose }) {
             )}
           </section>
 
-          {/* Optionale rechte Spalte, z.B. read-only Karte */}
-          <section className="event-right"></section>
+          {/* Rechte Spalte: Karte */}
+          <section className="details-right">
+            {coords ? (
+              <MapContainer
+                center={coords}
+                zoom={14}
+                scrollWheelZoom={false}
+                className="details-map"
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <RecenterMap center={coords} />
+                <Marker position={coords} icon={defaultIcon}>
+                  <Popup>
+                    <div style={{ maxWidth: 200 }}>
+                      <strong>{safeEvent.title}</strong>
+                      <div style={{ fontSize: 12, marginTop: 4 }}>{address}</div>
+                    </div>
+                  </Popup>
+                </Marker>
+              </MapContainer>
+            ) : (
+              <div className="details-map-placeholder">
+                {geocoding ? "Lade Karte…" : "Keine Kartenposition vorhanden."}
+              </div>
+            )}
+          </section>
         </div>
 
         <div className="event-modal-actions">
@@ -101,5 +188,3 @@ export default function EventDetails({ event, onClose }) {
 
   return createPortal(modal, document.body);
 }
-
-
