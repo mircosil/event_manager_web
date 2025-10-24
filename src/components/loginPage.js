@@ -1,3 +1,4 @@
+// src/components/loginPage.js (oder LoginPage.jsx)
 import React, { useState, useEffect } from "react";
 import "./loginPage.css";
 import EventModal from "./EventModal";
@@ -9,13 +10,15 @@ export default function LoginPage() {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // Tab aus der URL lesen (?tab=sport)
+  // Filter aus der URL (?tab, ?q, ?loc)
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "all";
+  const q = (searchParams.get("q") || "").toLowerCase();
+  const locQ = (searchParams.get("loc") || "").toLowerCase();
 
   const fetchEvents = async () => {
-    const q = query(collection(db, "events"), orderBy("createdAt", "desc"));
-    const snap = await getDocs(q);
+    const qy = query(collection(db, "events"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(qy);
 
     const items = snap.docs.map((docu) => {
       const data = docu.data();
@@ -45,7 +48,11 @@ export default function LoginPage() {
 
   // --- Filter-Helpers ---
   const toDate = (tsOrDate) =>
-    tsOrDate?.seconds ? new Date(tsOrDate.seconds * 1000) : (tsOrDate ? new Date(tsOrDate) : null);
+    tsOrDate?.seconds
+      ? new Date(tsOrDate.seconds * 1000)
+      : tsOrDate
+      ? new Date(tsOrDate)
+      : null;
 
   const occursInRange = (ev, start, end) => {
     const s = toDate(ev.startDate);
@@ -73,16 +80,32 @@ export default function LoginPage() {
   const hasCategory = (e, key) =>
     Array.isArray(e.categories) && e.categories.includes(key);
 
-  const filtered = events.filter((e) => {
-    if (activeTab === "all")     return true;
-    if (activeTab === "today")   return isToday(e);
-    if (activeTab === "weekend") return isThisWeekend(e);
-    return hasCategory(e, activeTab);
-  });
+  const matchesQuery = (e) =>
+    !q || (e.title || "").toLowerCase().includes(q);
+
+  const matchesLocation = (e) => {
+    if (!locQ) return true;
+    const addr =
+      typeof e.location === "string"
+        ? e.location
+        : e.location?.address || "";
+    return addr.toLowerCase().includes(locQ);
+  };
+
+  // Filterkette (ohne Semikolon nach dem ersten filter!)
+  const filtered = events
+    .filter((e) => {
+      if (activeTab === "all")     return true;
+      if (activeTab === "today")   return isToday(e);
+      if (activeTab === "weekend") return isThisWeekend(e);
+      return hasCategory(e, activeTab);
+    })
+    .filter(matchesQuery)
+    .filter(matchesLocation);
 
   return (
     <main style={{ padding: 20 }}>
-      {/* keine lokale Tabs-Leiste mehr – die obere (Header) steuert via ?tab=... */}
+      {/* kein lokales Tab-Menü – die Header-Leiste steuert via ?tab=... */}
 
       <div className="add-event-container">
         <button className="add-button" onClick={openAdd}>
@@ -146,5 +169,6 @@ export default function LoginPage() {
     </main>
   );
 }
+
 
 

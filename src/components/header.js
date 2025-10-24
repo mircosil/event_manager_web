@@ -1,5 +1,5 @@
 // src/components/header.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import LoginModal from "./loginModal";
 import "./header.css";
@@ -20,19 +20,38 @@ export default function Header({ onSearch, isLoggedIn, onLogout, onLoginSuccess 
   const [showLogin, setShowLogin] = useState(false);
 
   const location = useLocation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "all";
+
+  // Suchfelder mit URL-Params initialisieren & synchron halten
+  useEffect(() => {
+    setQuery(searchParams.get("q") || "");
+    setLocationText(searchParams.get("loc") || "");
+  }, [searchParams]);
+
+  // Hilfsfunktion: baut das Link-Ziel für einen Tab
+  const makeTo = (tabKey) => {
+    const sp = new URLSearchParams(searchParams);
+    if (tabKey && tabKey !== "all") sp.set("tab", tabKey);
+    else sp.delete("tab"); // "Alle" -> Tab-Param raus
+    return { pathname: location.pathname, search: sp.toString() };
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch?.({ query, location: locationText });
-  };
 
-  // baut eine URL zur aktuellen Seite auf, nur tab wird gesetzt/ersetzt
-  const makeTo = (key) => {
+    // optionaler Callback nach oben (falls genutzt)
+    onSearch?.({ query, location: locationText });
+
+    // q / loc in der URL setzen (tab bleibt unberührt)
     const sp = new URLSearchParams(searchParams);
-    sp.set("tab", key);
-    return { pathname: location.pathname, search: `?${sp.toString()}` };
+    if (query?.trim()) sp.set("q", query.trim());
+    else sp.delete("q");
+
+    if (locationText?.trim()) sp.set("loc", locationText.trim());
+    else sp.delete("loc");
+
+    setSearchParams(sp, { replace: true });
   };
 
   return (
@@ -97,4 +116,5 @@ export default function Header({ onSearch, isLoggedIn, onLogout, onLoginSuccess 
     </header>
   );
 }
+
 
