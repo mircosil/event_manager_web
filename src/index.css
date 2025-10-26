@@ -5,6 +5,15 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(145deg,rgba(216, 201, 174, 0.5) 45%, rgba(87, 87, 87, 0.5) 92%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+:root {
+  /* Endfarbe deines Seitenverlaufs (oder deine Seitenhintergrund-Farbe) */
+  --page-bg: #eae3d3;
+  --edge-fade: 80px;
 }
 
 code {

@@ -2,7 +2,7 @@
 .event-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.557);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,7 +58,7 @@
   aspect-ratio: 16 / 9;   
   object-fit: cover;
   border-radius: 8px;
-  background: #eee;       
+  background: #ffffff;       
   display: block;
 }
 
@@ -75,7 +75,7 @@
   height: 300px;        /* feste Höhe! */
   border-radius: 8px;
   overflow: hidden;
-  background: #eee;
+  background: #575757;
   position: relative;
 }
 
@@ -86,7 +86,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #575757;
   border-radius: 8px;
   font: inherit;
 }
@@ -103,12 +103,12 @@
   height: 300px;
   overflow: hidden;
   aspect-ratio: 16 / 9;   
-  background: #e9e9e9;
+  background: #575757;
   border-radius: 8px;
 }
 
 .event-right .event-address {
-  background: #eee;
+  background: hsl(0, 73%, 43%);
   border-radius: 8px;
   padding: 10px 12px;
   line-height: 1.4;
@@ -129,6 +129,13 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  background: #575757;
+  color: #D8C9AE;
+}
+
+.event-modal-actions button:hover{
+  background: #D8C9AE;
+  color: #575757;
 }
 
 .event-right .leaflet-container {
@@ -146,18 +153,18 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed #575757;
   border-radius: 8px;
   display: grid;
   place-items: center;
-  background: #f8fafc;
-  color: #64748b;
+  background: #575757;
+  color: #D8C9AE;
   cursor: pointer;
   transition: border-color .2s ease, background .2s ease;
   overflow: hidden;
 }
-.dropzone:hover { border-color: #60a5fa; background: #f1f5f9; }
-.dropzone.dragover { border-color: #3b82f6; background: #eaf2ff; }
+.dropzone:hover { border-color: #575757; background: #D8C9AE; }
+.dropzone.dragover { border-color: #575757; background: #D8C9AE; }
 .dropzone input[type="file"] { display: none; }
 
 .dropzone img.preview {
@@ -166,15 +173,22 @@
   object-fit: cover;
 }
 
+.empty-preview {
+  display: inline-flex;
+  font-size: 64px;       /* Größe des Icons */
+  line-height: 1;
+  color: #9ca3af;        /* Grau */
+}
+
 .dropzone .hint {
   position: absolute;
   bottom: 8px;
   left: 10px;
   right: 10px;
   font-size: .85rem;
-  color: #334155;
+  color: #575757;
   text-align: center;
-  background: rgba(255,255,255,.75);
+  background: #D8C9AE;
   border-radius: 6px;
   padding: 4px 6px;
 }
@@ -183,11 +197,12 @@
   margin-top: 12px;
 }
 
-.category-card {
-  border: 1px solid #e5e7eb;
+.category-
+ {
+  border: 1px solid #810e0e;
   border-radius: 10px;
   padding: 12px;
-  background: #fff;
+  background: #871515;
 }
 
 /* --- Kategorien als Chips --- */
@@ -199,7 +214,7 @@
   display: block;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #111827;
+  color: #000000;
 }
 
 .category-list {
@@ -214,9 +229,9 @@
   align-items: center;
   justify-content: center;
   padding: 10px 12px;
-  border: 1px solid #e5e7eb;    /* neutraler Rand */
+  border: 1px solid #575757;    /* neutraler Rand */
   border-radius: 9999px;         /* Pill-Form */
-  background: #fff;
+  background: #575757;
   cursor: pointer;
   user-select: none;
   transition: background .15s ease, color .15s ease, border-color .15s ease,
@@ -224,8 +239,8 @@
 }
 
 .chip:hover {
-  border-color: #cbd5e1;
-  background: #f8fafc;
+  border-color: #97A87A;
+  background: #dad7cd;
 }
 
 .chip:active {
@@ -243,18 +258,18 @@
 .chip span {
   font-size: 0.95rem;
   line-height: 1;
-  color: #111827;
+  color: #000000;
 }
 
 /* aktiver Zustand */
 .chip.is-checked {
-  background: #eef2ff;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
+  background: #97A87A;
+  border-color: #dad7cd;
+  box-shadow: 0 0 0 3px #dad7cd;
 }
 
 .chip.is-checked span {
-  color: #1e3a8a;
+  color: #000000;
   font-weight: 600;
 }
 
@@ -267,14 +282,12 @@
   border: none;
   padding: 0;
   font: inherit;
-  color: #2563eb;
+  color: #7a0c0c;
   cursor: pointer;
 }
-.link-btn:hover { text-decoration: underline; }
-
-
-
- 
+.link-btn:hover { 
+  text-decoration: underline; 
+}
 
 @media (max-width: 800px) {
   .event-layout {

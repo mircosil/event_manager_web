@@ -7,6 +7,8 @@ import MainPage from './components/mainPage';
 import LoginPage from './components/loginPage';
 import PrivateRoute from './components/PrivateRoute';
 import { auth, onAuthStateChanged, signOut } from "./firebase";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 
@@ -55,6 +57,15 @@ export default function App() {
 
         <Route path="*" element={<MainPage />} />        {/* Fallback */}
       </Routes>
+
+      <ToastContainer
+        position="top-center"
+        theme="colored"
+        autoClose={3500}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+      />
     </>
   );
 }

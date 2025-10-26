@@ -1,4 +1,3 @@
-// src/components/MainPage.jsx
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { db, collection, getDocs, orderBy, query } from "../firebase";

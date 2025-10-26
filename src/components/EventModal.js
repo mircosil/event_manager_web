@@ -1,4 +1,3 @@
-// src/components/EventModal.js
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import "./eventModal.css";
@@ -65,12 +64,12 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("./logo192.png");
+  const [imageUrl, setImageUrl] = useState(null);
   const [categories, setCategories] = useState([]);
 
   // Upload-States
   const [file, setFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState("./logo192.png");
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0); // 0..100
@@ -78,8 +77,8 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
   // Vorbefüllen beim Editieren
   useEffect(() => {
     if (!initialEvent) {
-      setPreviewUrl("./logo192.png");
-      setImageUrl("./logo192.png");
+      setPreviewUrl(null);
+      setImageUrl(null);
       setCategories([]);
       return;
     }
@@ -92,7 +91,7 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
     setDescription(initialEvent.description || "");
     setCategories(Array.isArray(initialEvent?.categories) ? initialEvent.categories : []);
 
-    const url = initialEvent.imageUrl || "./logo192.png";
+    const url = initialEvent.imageUrl || null;
     setImageUrl(url);
     setPreviewUrl(url);
 
@@ -254,7 +253,7 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
                 {previewUrl ? (
                   <img src={previewUrl} alt="Vorschau" className="preview" />
                 ) : (
-                  <span>Bild hierher ziehen oder klicken</span>
+                  <i className="bi bi-card-image empty-preview" aria-hidden="true"></i>
                 )}
                 <input type="file" accept="image/*" onChange={onFileChange} />
                 <div className="hint">

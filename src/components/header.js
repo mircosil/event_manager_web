@@ -1,4 +1,3 @@
-// src/components/header.js
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import LoginModal from "./loginModal";
@@ -8,10 +7,10 @@ const HEADER_TABS = [
   { key: "all",     label: "Alle" },
   { key: "today",   label: "Heute" },
   { key: "weekend", label: "Dieses Wochenende" },
-  { key: "sport",   label: "Sport" },
-  { key: "food",    label: "Essen & Trinken" },
-  { key: "folk",    label: "Volksfeste" },
-  { key: "culture", label: "Kulturen & Traditionen" },
+  { key: "Sport",   label: "Sport" },
+  { key: "Essen & Trinken",    label: "Essen & Trinken" },
+  { key: "Volksfest",    label: "Volksfeste" },
+  { key: "Kultur & Tradition", label: "Kultur & Tradition" },
 ];
 
 export default function Header({ onSearch, isLoggedIn, onLogout, onLoginSuccess }) {

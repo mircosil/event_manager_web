@@ -1,4 +1,3 @@
-// src/components/loginPage.js (oder LoginPage.jsx)
 import React, { useState, useEffect } from "react";
 import "./loginPage.css";
 import EventModal from "./EventModal";

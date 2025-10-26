@@ -1,7 +1,7 @@
 export const CATEGORY_OPTIONS = [
-    { key: "sport",   label: "Sport" },
-    { key: "food",    label: "Essen & Trinken" },
-    { key: "folk",    label: "Volksfeste" },
-    { key: "culture", label: "Kulturen & Traditionen" },
+    { key: "Sport",   label: "Sport" },
+    { key: "Essen & Trinken",    label: "Essen & Trinken" },
+    { key: "Volksfest",    label: "Volksfest" },
+    { key: "Kultur & Tradition", label: "Kultur & Tradition" },
   ];
   
