@@ -5,7 +5,7 @@ import L from "leaflet";
 import "./eventModal.css";   
 import "./eventDetails.css";  
 
-// Leaflet Marker-Icon sauber setzen (funktioniert in CRA/Vite/Webpack)
+// Leaflet Marker-Icon
 const defaultIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
@@ -16,7 +16,7 @@ const defaultIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-// Map sanft auf neue Koordinaten zentrieren
+// Map auf neue Koordinaten zentrieren
 function RecenterMap({ center }) {
   const map = useMap();
   useEffect(() => {
@@ -26,17 +26,15 @@ function RecenterMap({ center }) {
 }
 
 export default function EventDetails({ event, onClose }) {
-  // ⚠️ Hooks müssen vor jedem early return stehen
-  // Wir arbeiten erstmal mit einem "sicheren" Event-Objekt
   const safeEvent = event ?? {};
 
-  // Adresse robust ableiten (String + Objekt)
+  // Adresse robust ableiten
   const address =
     typeof safeEvent.location === "string"
       ? safeEvent.location
       : safeEvent.location?.address || "";
 
-  // Koordinaten aus dem Event lesen (falls vorhanden)
+  // Koordinaten aus dem Event lesen
   const initialCoords = useMemo(() => {
     const loc = safeEvent.location && typeof safeEvent.location === "object"
       ? safeEvent.location
@@ -46,11 +44,11 @@ export default function EventDetails({ event, onClose }) {
     return Number.isFinite(lat) && Number.isFinite(lon) ? [lat, lon] : null;
   }, [safeEvent.location]);
 
-  // Zustand für die tatsächlich anzuzeigenden Koordinaten
+  // Zustand für die anzuzeigenden Koordinaten
   const [coords, setCoords] = useState(initialCoords);
   const [geocoding, setGeocoding] = useState(false);
 
-  // Falls keine Koordinaten vorhanden, einmalig per Nominatim aus der Adresse ermitteln
+  // Falls keine Koordinaten vorhanden, einmalig aus der Adresse ermitteln
   useEffect(() => {
     let cancelled = false;
 
@@ -70,7 +68,7 @@ export default function EventDetails({ event, onClose }) {
           }
         }
       } catch {
-        // still fine – Karte bleibt einfach aus
+        
       } finally {
         if (!cancelled) setGeocoding(false);
       }
@@ -96,7 +94,6 @@ export default function EventDetails({ event, onClose }) {
   // Kategorien
   const cats = Array.isArray(safeEvent.categories) ? safeEvent.categories : [];
 
-  // ✅ Erst NACH den Hooks darf früh beendet werden
   if (!event) return null;
 
   const modal = (

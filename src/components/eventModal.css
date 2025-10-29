@@ -1,4 +1,3 @@
-/* ===== Overlay & Modal ===== */
 .event-modal-overlay {
   position: fixed;
   inset: 0;
@@ -34,7 +33,6 @@
   overflow: auto;
 }
 
-
 .event-layout {
   display: grid;
   position: relative;
@@ -62,9 +60,9 @@
   display: block;
 }
 
-.leaflet-container {              /* MapWithSearch rendert diese Klasse */
+.leaflet-container {
   position: relative;
-  z-index: 1;                     /* unter den Actions belassen */
+  z-index: 1;           
   border-radius: 8px;
 }
 
@@ -72,7 +70,7 @@
 
 .event-details-map {
   width: 100%;
-  height: 300px;        /* feste Höhe! */
+  height: 300px;
   border-radius: 8px;
   overflow: hidden;
   background: #575757;
@@ -175,9 +173,9 @@
 
 .empty-preview {
   display: inline-flex;
-  font-size: 64px;       /* Größe des Icons */
+  font-size: 64px;
   line-height: 1;
-  color: #9ca3af;        /* Grau */
+  color: #9ca3af;
 }
 
 .dropzone .hint {
@@ -205,7 +203,6 @@
   background: #871515;
 }
 
-/* --- Kategorien als Chips --- */
 .category-group {
   margin-top: 12px;
 }
@@ -229,8 +226,8 @@
   align-items: center;
   justify-content: center;
   padding: 10px 12px;
-  border: 1px solid #575757;    /* neutraler Rand */
-  border-radius: 9999px;         /* Pill-Form */
+  border: 1px solid #575757;
+  border-radius: 9999px;
   background: #575757;
   cursor: pointer;
   user-select: none;
@@ -248,7 +245,6 @@
 }
 
 .chip input {
-  /* native Checkbox unsichtbar, aber fokussierbar */
   position: absolute;
   inset: 0;
   opacity: 0;
@@ -261,7 +257,6 @@
   color: #000000;
 }
 
-/* aktiver Zustand */
 .chip.is-checked {
   background: #97A87A;
   border-color: #dad7cd;

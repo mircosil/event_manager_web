@@ -63,7 +63,7 @@ export default function MainPage() {
 
   const isThisWeekend = (ev) => {
     const now = new Date();
-    const day = now.getDay(); // So=0 ... Sa=6
+    const day = now.getDay();
     const diffToSat = (6 - day + 7) % 7;
     const sat = new Date(now); sat.setHours(0, 0, 0, 0); sat.setDate(now.getDate() + diffToSat);
     const sun = new Date(sat); sun.setHours(23, 59, 59, 999); sun.setDate(sat.getDate() + 1);

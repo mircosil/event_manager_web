@@ -10,8 +10,6 @@ import { auth, onAuthStateChanged, signOut } from "./firebase";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
-
 export default function App() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -23,15 +21,12 @@ export default function App() {
 
   const handleSearch = ({ query, location }) => {
     console.log("Suche:", query, "Ort:", location);
-    // hier später: API call / Filter deiner Eventliste
   };
 
   const handleLogout = async () => {
     await signOut(auth);
     navigate("/", { replace: true });
   };
-
-
 
   return (
     <>
@@ -42,7 +37,7 @@ export default function App() {
         onLogout={handleLogout} 
       />
 
-      {/* Seitenwechsel hier */}
+      {/* Seitenwechsel*/}
       <Routes>
         <Route path="/" element={<MainPage />} />        {/* Startseite */}
 

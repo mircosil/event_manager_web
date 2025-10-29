@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // Filter aus der URL (?tab, ?q, ?loc)
+  // Filter aus der URL
   const [searchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "all";
   const q = (searchParams.get("q") || "").toLowerCase();
@@ -69,7 +69,7 @@ export default function LoginPage() {
 
   const isThisWeekend = (ev) => {
     const now = new Date();
-    const day = now.getDay(); // So=0 ... Sa=6
+    const day = now.getDay();
     const diffToSat = (6 - day + 7) % 7;
     const sat = new Date(now); sat.setHours(0,0,0,0); sat.setDate(now.getDate() + diffToSat);
     const sun = new Date(sat); sun.setHours(23,59,59,999); sun.setDate(sat.getDate() + 1);
@@ -91,7 +91,7 @@ export default function LoginPage() {
     return addr.toLowerCase().includes(locQ);
   };
 
-  // Filterkette (ohne Semikolon nach dem ersten filter!)
+  // Filterkette
   const filtered = events
     .filter((e) => {
       if (activeTab === "all")     return true;
@@ -104,7 +104,7 @@ export default function LoginPage() {
 
   return (
     <main style={{ padding: 20 }}>
-      {/* kein lokales Tab-Menü – die Header-Leiste steuert via ?tab=... */}
+      {/* kein lokales Tab-Menü */}
 
       <div className="add-event-container">
         <button className="add-button" onClick={openAdd}>

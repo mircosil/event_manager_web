@@ -8,7 +8,6 @@
   z-index: 1000;
 }
 
-/* WICHTIG: kein Klassenname "modal", sonst Konflikt mit Bootstrap */
 .loginmodal {
   background: #575757a5;
   border-radius: 16px;

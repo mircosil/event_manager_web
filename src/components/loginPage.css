@@ -4,10 +4,9 @@ main {
     padding: 20px;
     height: 100%;
   }
-  
 
 .add-event-container {
-    position: fixed;   /* bleibt auch beim Scrollen sichtbar */
+    position: fixed;
     bottom: 20px;
     right: 20px;
   }
@@ -31,17 +30,17 @@ main {
     margin-right: 0.5rem;  
 }    
   
-  .add-button:hover {
-    background: #D8C9AE;
-    color: #575757;
-  }
+.add-button:hover {
+   background: #D8C9AE;
+   color: #575757;
+}
 
-  :root {
-    --container-max: 1920px;  
-    --gap: 24px;              
-    --card-min: 300px;       
-    --img-h: 230px;           
-  }
+:root {
+  --container-max: 1920px;  
+  --gap: 24px;              
+  --card-min: 300px;       
+  --img-h: 230px;           
+}
 
 /* Container für alle Event-Cards */
 .event-card-container {
@@ -53,7 +52,6 @@ main {
   margin: 0 auto; 
 }
 
-/* Jede einzelne Karte */
 .event-card {
   display: flex;
   flex-direction: column;
@@ -65,7 +63,6 @@ main {
   margin-top: 20px;
 }
 
-/* Hover-Effekt */
 .event-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.15);
@@ -87,7 +84,6 @@ main {
   padding: 14px 16px;
 }
 
-/* Titel und Text */
 .event-card .card-title {
   font-weight: 700;
 }
@@ -96,7 +92,6 @@ main {
   font-size: 1.2rem;
 }
 
-/* Button */
 .event-card .btn {
   margin-top: auto;
 }

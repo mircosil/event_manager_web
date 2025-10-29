@@ -22,7 +22,7 @@ export default function Header({ onSearch, isLoggedIn, onLogout, onLoginSuccess 
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab") || "all";
 
-  // Suchfelder mit URL-Params initialisieren & synchron halten
+  // Suchfelder
   useEffect(() => {
     setQuery(searchParams.get("q") || "");
     setLocationText(searchParams.get("loc") || "");
@@ -32,17 +32,15 @@ export default function Header({ onSearch, isLoggedIn, onLogout, onLoginSuccess 
   const makeTo = (tabKey) => {
     const sp = new URLSearchParams(searchParams);
     if (tabKey && tabKey !== "all") sp.set("tab", tabKey);
-    else sp.delete("tab"); // "Alle" -> Tab-Param raus
+    else sp.delete("tab");
     return { pathname: location.pathname, search: sp.toString() };
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // optionaler Callback nach oben (falls genutzt)
     onSearch?.({ query, location: locationText });
 
-    // q / loc in der URL setzen (tab bleibt unberührt)
     const sp = new URLSearchParams(searchParams);
     if (query?.trim()) sp.set("q", query.trim());
     else sp.delete("q");

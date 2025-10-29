@@ -1,11 +1,10 @@
-// src/components/MapWithSearch.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css"; 
 import "./MapWithSearch.css"; 
 
-// Minimaler Marker (optional eigenes Icon)
+// Minimaler Marker
 const markerIcon = new L.Icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
@@ -23,7 +22,6 @@ function FlyTo({ center }) {
 }
 
 export default function MapWithSearch({ location, setLocation }) {
-  // location: { address?: string, lat?: number, lon?: number } ODER string
   const parsed = useMemo(() => {
     if (typeof location === "string") return { address: location };
     return location || {};
@@ -38,11 +36,10 @@ export default function MapWithSearch({ location, setLocation }) {
   // Karte/Marker-Position
   const center = useMemo(() => {
     if (parsed.lat && parsed.lon) return [parsed.lat, parsed.lon];
-    // Default: Berlin Mitte
     return [52.520008, 13.404954];
   }, [parsed.lat, parsed.lon]);
 
-  // Debounce-Suche (Nominatim)
+  // Debounce-Suche
   useEffect(() => {
     if (!query || query.trim().length < 2) {
       setResults([]);
@@ -64,7 +61,6 @@ export default function MapWithSearch({ location, setLocation }) {
         const res = await fetch(url, {
           signal: abortRef.current.signal,
           headers: {
-            // Nominatim verlangt eine identifizierbare User-Agent/Referer
             "Accept": "application/json",
           },
         });
@@ -148,7 +144,7 @@ export default function MapWithSearch({ location, setLocation }) {
               <li
                 key={item.id}
                 className={idx === highlight ? "active" : ""}
-                onMouseDown={() => choose(item)}  // mousedown, damit Input nicht blur't
+                onMouseDown={() => choose(item)}
                 onMouseEnter={() => setHighlight(idx)}
               >
                 {item.display}

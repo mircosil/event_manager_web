@@ -2,12 +2,11 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import './index.css';
-import App from './App';
+import App from './App.js';
 import { BrowserRouter } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import "leaflet/dist/leaflet.css";
-
 
 /*
 createRoot(document.getElementById("root")).render(

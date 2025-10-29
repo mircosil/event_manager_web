@@ -3,15 +3,9 @@ import "./loginModal.css";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 import { toast } from "react-toastify";
-import {
-  setPersistence,
-  browserLocalPersistence,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import { setPersistence, browserLocalPersistence, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, } from "firebase/auth";
 
-/** Freundliche Fehlermeldungen für Login */
+/** Fehlermeldungen für Login */
 function mapAuthError(err) {
   switch (err?.code) {
     case "auth/invalid-credential":
@@ -30,7 +24,7 @@ function mapAuthError(err) {
   }
 }
 
-/** Freundliche Fehlermeldungen für Registrierung */
+/** Fehlermeldungen für Registrierung */
 function mapRegisterError(err) {
   switch (err?.code) {
     case "auth/email-already-in-use":
@@ -68,9 +62,8 @@ export default function LoginModal({ onClose }) {
       navigate("/loginPage", { replace: true });
       onClose?.();
     } catch (err) {
-      // Freundliche Toast-Fehlermeldung
+      // Toast-Fehlermeldung
       toast.error(mapAuthError(err));
-      // optional debug: console.error("LOGIN ERROR:", err);
     } finally {
       setLoadingLogin(false);
     }
@@ -91,7 +84,6 @@ export default function LoginModal({ onClose }) {
       await setPersistence(auth, browserLocalPersistence);
       const cred = await createUserWithEmailAndPassword(auth, email, password);
 
-      // Optional: Display Name setzen, wenn Name angegeben
       if (name && cred.user) {
         await updateProfile(cred.user, { displayName: name });
       }
@@ -101,7 +93,6 @@ export default function LoginModal({ onClose }) {
       onClose?.();
     } catch (err) {
       toast.error(mapRegisterError(err));
-      // optional debug: console.error("REGISTER ERROR:", err);
     } finally {
       setLoadingRegister(false);
     }

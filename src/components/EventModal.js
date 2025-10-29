@@ -24,7 +24,7 @@ function toTimestampOrNull(s) {
   return Number.isNaN(d.getTime()) ? null : Timestamp.fromDate(d);
 }
 
-// Große Bilder vor Upload verkleinern (macht Upload schneller)
+// Große Bilder vor Upload verkleinern
 async function compressImage(file, maxW = 1600, maxH = 1200, quality = 0.8) {
   try {
     if (!file?.type?.startsWith("image/")) return file;
@@ -50,7 +50,7 @@ async function compressImage(file, maxW = 1600, maxH = 1200, quality = 0.8) {
     const blob = await new Promise((res) => canvas.toBlob(res, mime, quality));
     return blob ? new File([blob], file.name, { type: blob.type }) : file;
   } catch {
-    return file; // Fallback
+    return file;
   }
 }
 
@@ -142,7 +142,7 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
     if (new Date(endDate) < new Date(startDate))
       return alert("Ende darf nicht vor dem Beginn liegen.");
 
-    // Bild ggf. komprimieren & mit Fortschritt hochladen
+    // Bild komprimieren & mit Fortschritt hochladen
     let finalImageUrl = imageUrl;
     try {
       if (file) {
@@ -199,7 +199,7 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
       description,
       imageUrl: finalImageUrl,
       userId: user.uid,
-      categories: categories, // Mehrfachkategorien
+      categories: categories,
     };
 
     try {
@@ -307,7 +307,7 @@ export default function EventModal({ onClose, onEventAdded, initialEvent }) {
 
               <div className="category-list">
                 {CATEGORY_OPTIONS
-                  .filter(o => !["today", "weekend"].includes(o.key)) // nur echte Kategorien
+                  .filter(o => !["today", "weekend"].includes(o.key))
                   .map(opt => {
                     const checked = categories.includes(opt.key);
                     return (
