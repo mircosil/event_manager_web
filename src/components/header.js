@@ -65,21 +65,21 @@ export default function Header({ onSearch, isLoggedIn, onLogout, onLoginSuccess 
         )}
       </div>
 
-      <h1>Deine lokalen Events</h1>
+      <h1>Erlebe deine Region</h1>
 
       <form className="searchbar" onSubmit={handleSubmit}>
-        <label className="search-label" htmlFor="q">Search Event:</label>
+        <label className="search-label" htmlFor="q">Event suchen:</label>
         <input
           id="q"
           type="text"
-          placeholder="Search"
+          placeholder="Event suchen"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
         <input
           id="loc"
           type="text"
-          placeholder="Ort suche"
+          placeholder="Ort suchen"
           value={locationText}
           onChange={(e) => setLocationText(e.target.value)}
         />
